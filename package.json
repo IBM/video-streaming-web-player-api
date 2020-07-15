@@ -1,0 +1,47 @@
+{
+  "name": "ibm-video-streaming-web-player-api",
+  "author": "",
+  "version": "0.0.1",
+  "description": "IBM Video Streaming web player API for controlling embedded players created at video.ibm.com.",
+  "main": "dist/index.min.js",
+  "scripts": {
+    "test": "jest",
+    "lint": "eslint --color src/**/*.js tests/**/*.js",
+    "example": "npm run build && npx http-server -o /examples",
+    "build": "npm run build:prod && npm run build:dev",
+    "build:dev": "webpack --config webpack.dev.config.js",
+    "build:prod": "webpack --config webpack.prod.config.js",
+    "postversion": "git push && git push --tags",
+    "version": "npx standard-version"
+  },
+  "devDependencies": {
+    "babel-loader": "^8.1.0",
+    "eslint": "^7.4.0",
+    "eslint-config-airbnb-base": "^14.2.0",
+    "eslint-plugin-import": "^2.22.0",
+    "jest": "^26.1.0",
+    "standard-version": "^8.0.2",
+    "webpack": "^4.43.0",
+    "webpack-cli": "^3.3.12"
+  },
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/IBM/video-streaming-web-player-api.git"
+  },
+  "keywords": [
+    "ibm",
+    "video",
+    "streaming",
+    "embed",
+    "player",
+    "web"
+  ],
+  "files": [
+    "dist"
+  ],
+  "license": "Apache-2.0",
+  "bugs": {
+    "url": "https://github.com/IBM/video-streaming-web-player-api/issues"
+  },
+  "homepage": "https://github.com/IBM/video-streaming-web-player-api#readme"
+}
