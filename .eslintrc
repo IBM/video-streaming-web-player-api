@@ -1,0 +1,53 @@
+{
+  "extends": "airbnb-base",
+  "env": {
+    "browser": true,
+    "node": false,
+    "jest": true
+  },
+  "globals": {
+    "module": true
+  },
+  "rules": {
+    "func-names": [1, "as-needed"],
+    "vars-on-top": 0,
+    "global-require": 0,
+    "no-param-reassign": [1, { "props": true }],
+    "import/prefer-default-export": 0,
+    "max-len": [
+      "error",
+      120,
+      2,
+      {
+        "ignoreUrls": true,
+        "ignoreComments": false,
+        "ignoreRegExpLiterals": true,
+        "ignoreStrings": true,
+        "ignoreTemplateLiterals": true
+      }
+    ],
+    "no-tabs": 0,
+    "no-use-before-define": 0,
+    "indent": [
+      2,
+      "tab",
+      {
+        "SwitchCase": 1
+      }
+    ],
+    "no-restricted-properties": [
+      "error",
+      {
+        "object": "arguments",
+        "property": "callee",
+        "message": "arguments.callee is deprecated"
+      }, {
+        "property": "__defineGetter__",
+        "message": "Please use Object.defineProperty instead."
+      }, {
+        "property": "__defineSetter__",
+        "message": "Please use Object.defineProperty instead."
+      }
+    ]
+  }
+}
