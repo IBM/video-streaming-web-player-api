@@ -12,7 +12,7 @@
     "build:dev": "webpack --config webpack.dev.config.js",
     "build:prod": "webpack --config webpack.prod.config.js",
     "postversion": "git push && git push --tags",
-    "version": "npx standard-version"
+    "version": "standard-version"
   },
   "devDependencies": {
     "babel-loader": "^8.1.0",

@@ -6,16 +6,15 @@
  * live streams and on demand playback of embedded players.
  */
 export default (function () {
-	const objectKeys = (typeof Object.keys !== 'undefined');
 	const instances = {};
-	const hostRegexp = new RegExp('^(http(?:s)?\://[^/]+)', 'im');
+	const hostRegexp = new RegExp('^(http(?:s)?://[^/]+)', 'im');
 
-	function UstreamEmbed(iframe) {
+	function Embed(iframe) {
 		return createInstance(iframe);
 	}
 
 	function createInstance(iframe) {
-		const element = getIframe(iframe);
+		const iframeElement = getIframe(iframe);
 		const instance = (function (element) {
 			let isReady = false;
 			let instanceObj;
@@ -34,12 +33,11 @@ export default (function () {
 
 			sendMessage(element, embedHost, { cmd: 'probe' });
 
-			function addCommandQueue(method) {
+			function addCommandQueue(method, ...args) {
 				if (method === 'socialstream') {
 					addDomEvent(window, 'message', onSocialFrame);
 
-					sStreamElement = getIframe(arguments[1]);
-
+					sStreamElement = getIframe(args[0]);
 					sStreamHost = getHostName(sStreamElement.getAttribute('src'));
 					sStreamConnected = true;
 
@@ -55,12 +53,10 @@ export default (function () {
 					if (!cmdQueue) {
 						cmdQueue = [];
 					}
-					cmdQueue.push(arguments);
+					cmdQueue.push([method, ...args]);
 					sendMessage(element, embedHost, { cmd: 'probe' });
 					return;
 				}
-
-				const args = (makeArray(arguments)).slice(1);
 
 				if (args[0] && typeof args[0] === 'function') {
 					if (!getters[method]) {
@@ -93,17 +89,13 @@ export default (function () {
 
 			function onSStreamMsg(e) {
 				const d = JSON.parse(e.data);
-				let args;
 
-				if (!!d.cmd && d.cmd == 'ready') {
+				if (!!d.cmd && d.cmd === 'ready') {
 					sendMessage(sStreamElement, sStreamHost, { cmd: 'ready' });
 					return;
 				}
 
-				args = [d.cmd];
-				args = args.concat(d.args);
-
-				addCommandQueue.apply(this, args);
+				addCommandQueue.apply(this, [d.cmd, ...d.args]);
 			}
 
 			function onLoadElement() {
@@ -124,16 +116,16 @@ export default (function () {
 				}
 			}
 
-			function callMethod() {
-				addCommandQueue.apply(this, arguments);
+			function callMethod(...args) {
+				addCommandQueue.apply(this, args);
 			}
 
-			return instanceObj = {
+			instanceObj = {
 				host: embedHost,
 				callMethod,
 
-				getProperty() {
-					callMethod.apply(this, arguments);
+				getProperty(...args) {
+					callMethod.apply(this, args);
 				},
 
 				addListener(event, callback) {
@@ -165,7 +157,7 @@ export default (function () {
 						});
 					}
 
-					if (e.origin.toLowerCase() == embedHost) {
+					if (e.origin.toLowerCase() === embedHost) {
 						try {
 							d = JSON.parse(e.data);
 						} catch (err) {
@@ -191,33 +183,17 @@ export default (function () {
 						}
 
 						if (!!d.event && !d.event.ready) {
-							if (objectKeys) {
-								Object.keys(d.event).forEach((key) => {
-									dispatchEvent(events, key, d.event[key]);
-								});
-							} else {
-								for (var key in d.event) {
-									if (d.event.hasOwnProperty(key)) {
-										dispatchEvent(events, key, d.event[key]);
-									}
-								}
-							}
+							Object.keys(d.event).forEach((key) => {
+								dispatchEvent(events, key, d.event[key]);
+							});
 						}
 
 						if (d.property) {
-							if (objectKeys) {
-								Object.keys(d.property).forEach((key) => {
-									callGetter(getters, key, d.property[key]);
-								});
-							} else {
-								for (var key in d.property) {
-									if (d.property.hasOwnProperty(key)) {
-										callGetter(getters, key, d.property[key]);
-									}
-								}
-							}
+							Object.keys(d.property).forEach((key) => {
+								callGetter(getters, key, d.property[key]);
+							});
 						}
-					} else if (sStreamConnected && e.origin == sStreamHost) {
+					} else if (sStreamConnected && e.origin === sStreamHost) {
 						onSStreamMsg(e);
 					}
 				},
@@ -233,19 +209,24 @@ export default (function () {
 					events = {};
 					ieHackEvent = [];
 
-					if (instances[element.id]) instances[element.id] = null;
+					if (instances[element.id]) {
+						instances[element.id] = null;
+						delete instances[element.id];
+					}
 					element = null;
 				},
 			};
-		}(element));
 
-		if (!element.id) {
-			element.id = `UstreamEmbed${Math.ceil(Math.random() * 100000)}`;
+			return instanceObj;
+		})(iframeElement);
+
+		if (!iframeElement.id) {
+			iframeElement.id = `Embed${Math.ceil(Math.random() * 100000)}`;
 		}
 
-		instance.id = element.id;
+		instance.id = iframeElement.id;
 
-		instances[element.id] = instance;
+		instances[iframeElement.id] = instance;
 		return instance;
 	}
 
@@ -257,11 +238,13 @@ export default (function () {
 	}
 
 	function dispatchEvent(events, event, data) {
-		for (const cb in events[event]) {
-			if (events[event].hasOwnProperty(cb)) {
-				events[event][cb].call(window, event, data);
-			}
+		if (!events[event]) {
+			return;
 		}
+
+		events[event].forEach((callback) => {
+			callback.call(window, event, data);
+		});
 	}
 
 	function callGetter(getters, event, data) {
@@ -280,20 +263,16 @@ export default (function () {
 	}
 
 	function onMessage(e) {
-		let ins; let
-			doc;
-		for (ins in instances) {
-			if (instances.hasOwnProperty(ins) && instances[ins]) {
-				doc = document.getElementById(ins);
-				if (doc && doc.contentWindow) {
-					if (doc.contentWindow === e.source) {
-						instances[ins].onmessage(e);
-					}
-				} else if (typeof e.source === 'string' && e.source == ins) {
-					instances[ins].onmessage(e);
+		Object.entries(instances).forEach(([id, instance]) => {
+			const doc = document.getElementById(id);
+			if (doc && doc.contentWindow) {
+				if (doc.contentWindow === e.source) {
+					instance.onmessage(e);
 				}
+			} else if (typeof e.source === 'string' && e.source === id) {
+				instance.onmessage(e);
 			}
-		}
+		});
 	}
 
 	function sendMessage(element, host, data) {
@@ -302,13 +281,9 @@ export default (function () {
 
 	function getHostName(url) {
 		if (url.indexOf('http') < 0) {
-			url = location.protocol + url;
+			url = window.location.protocol + url;
 		}
 		return url.match(hostRegexp)[1].toString();
-	}
-
-	function makeArray(smtg) {
-		return Array.prototype.slice.call(smtg, 0);
 	}
 
 	function addDomEvent(target, event, cb) {
@@ -321,5 +296,6 @@ export default (function () {
 
 	addDomEvent(window, 'message', onMessage);
 
-	return (window.UstreamEmbed = UstreamEmbed);
-}());
+	window.UstreamEmbed = Embed;
+	return Embed;
+})();

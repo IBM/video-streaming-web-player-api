@@ -2,7 +2,7 @@
 
 [![Build Status](https://travis-ci.org/IBM/video-streaming-web-player-api.svg?branch=master)](https://travis-ci.org/IBM/video-streaming-web-player-api)
 
-Enables sites using the [IBM Video Streamin] embed iframe to build and adapt on the embed live player.
+Enables sites using the [IBM Video Streaming] embed iframe to build and adapt on the embed live player.
 
 The IBM Video Streaming Player API provides basic methods to control the live stream or recorded video playback, and enables the user to access essential events of the live stream or the played video.
 
