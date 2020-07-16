@@ -1,6 +1,6 @@
 # IBM Video Streaming Player API
 
-[![Build Status](https://travis-ci.org/IBM/video-streaming-web-player-api.svg?branch=master)](https://travis-ci.org/IBM/video-streaming-web-player-api)
+[![Build Status](https://travis-ci.com/IBM/video-streaming-web-player-api.svg?branch=master)](https://travis-ci.com/IBM/video-streaming-web-player-api)
 
 Enables sites using the [IBM Video Streaming] embed iframe to build and adapt on the embed live player.
 
