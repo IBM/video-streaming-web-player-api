@@ -3,19 +3,20 @@
   "author": "",
   "version": "0.0.1",
   "description": "IBM Video Streaming web player API for controlling embedded players created at video.ibm.com.",
-  "main": "dist/index.min.js",
-  "module": "src/index.js",
+  "main": "dist/index.umd.min.js",
+  "module": "dist/index.es.min.js",
   "scripts": {
     "test": "jest",
     "lint": "eslint --color src/**/*.js tests/**/*.js",
     "example": "npm run build && npx http-server -o /examples",
-    "build": "npm run build:prod && npm run build:dev",
-    "build:dev": "webpack --config webpack.dev.config.js",
-    "build:prod": "webpack --config webpack.prod.config.js",
+    "build": "npm run build:dev && npm run build:prod",
+    "build:dev": "webpack --env development --config webpack.es.config.js && webpack --env development --config webpack.umd.config.js",
+    "build:prod": "webpack --env production --config webpack.es.config.js && webpack --env production --config webpack.umd.config.js",
     "postversion": "git push && git push --tags",
     "version": "standard-version"
   },
   "devDependencies": {
+    "@purtuga/esm-webpack-plugin": "^1.2.1",
     "babel-loader": "^8.1.0",
     "eslint": "^7.4.0",
     "eslint-config-airbnb-base": "^14.2.0",
@@ -44,5 +45,8 @@
   "bugs": {
     "url": "https://github.com/IBM/video-streaming-web-player-api/issues"
   },
-  "homepage": "https://github.com/IBM/video-streaming-web-player-api#readme"
+  "homepage": "https://github.com/IBM/video-streaming-web-player-api#readme",
+  "dependencies": {
+    "webpack-merge": "^5.0.9"
+  }
 }
