@@ -1,4 +1,4 @@
-const EmbedApi = require('../dist/index').default;
+const EmbedApi = require('../dist/index.umd').default;
 const createMockFrame = require('./mocks/frame');
 
 describe('EmbedAPI tests', () => {
