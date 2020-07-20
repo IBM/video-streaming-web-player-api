@@ -58,7 +58,12 @@ export default (function () {
 						cmdQueue = [];
 					}
 					cmdQueue.push([method, ...args]);
-					sendMessage(element, embedHost, { cmd: 'probe' });
+
+					try {
+						sendMessage(element, embedHost, { cmd: 'probe' });
+					} catch (err) {
+						// suppress error
+					}
 					return;
 				}
 
