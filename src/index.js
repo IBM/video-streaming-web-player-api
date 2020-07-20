@@ -31,7 +31,11 @@ export default (function () {
 
 			element.onload = onLoadElement;
 
-			sendMessage(element, embedHost, { cmd: 'probe' });
+			try {
+				sendMessage(element, embedHost, { cmd: 'probe' });
+			} catch (err) {
+				// suppress error
+			}
 
 			function addCommandQueue(method, ...args) {
 				if (method === 'socialstream') {
