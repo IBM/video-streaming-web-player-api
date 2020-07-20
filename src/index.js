@@ -31,12 +31,6 @@ export default (function () {
 
 			element.onload = onLoadElement;
 
-			try {
-				sendMessage(element, embedHost, { cmd: 'probe' });
-			} catch (err) {
-				// suppress error
-			}
-
 			function addCommandQueue(method, ...args) {
 				if (method === 'socialstream') {
 					addDomEvent(window, 'message', onSocialFrame);
@@ -59,11 +53,7 @@ export default (function () {
 					}
 					cmdQueue.push([method, ...args]);
 
-					try {
-						sendMessage(element, embedHost, { cmd: 'probe' });
-					} catch (err) {
-						// suppress error
-					}
+					sendMessage(element, embedHost, { cmd: 'probe' });
 					return;
 				}
 
