@@ -289,6 +289,7 @@ viewer.getProperty('volume', function (volume) {
     // volume == 0 for muted playback
     ...
 });
+```
 
 ---------------------------------------
 
