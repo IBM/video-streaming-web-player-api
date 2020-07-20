@@ -24,7 +24,7 @@
 
 
     <div class="page-header">
-        <h1>Ustream EmbedAPI <small>dynamically inserted iframes</small></h1>
+        <h1>Player API <small>dynamically inserted iframes</small></h1>
     </div>
 
 
@@ -118,8 +118,8 @@
             /*
              create player instances
              */
-            var alpha = UstreamEmbed("FrameAlpha"),
-                    beta = UstreamEmbed("FrameBeta"),
+            var alpha = PlayerAPI("FrameAlpha"),
+                    beta = PlayerAPI("FrameBeta"),
                     gamma;
             /*
              bind controls to buttons
@@ -191,7 +191,7 @@
                 gammaFrame.height = 213;
                 gammaHolder.appendChild(gammaFrame);
 
-                gamma = UstreamEmbed(gammaFrame);
+                gamma = PlayerAPI(gammaFrame);
 
                 $('#PlayGamma').on('click', function (e) { e.preventDefault(); e.stopPropagation(); gamma.callMethod('play'); });
                 $('#PauseGamma').on('click', function (e) { e.preventDefault(); e.stopPropagation(); gamma.callMethod('pause'); });

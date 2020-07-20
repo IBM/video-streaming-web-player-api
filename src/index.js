@@ -296,6 +296,6 @@ export default (function () {
 
 	addDomEvent(window, 'message', onMessage);
 
-	window.UstreamEmbed = Embed;
+	window.PlayerAPI = Embed;
 	return Embed;
 })();
