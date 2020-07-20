@@ -1,23 +1,47 @@
-# IBM Video Streaming Player API
+# IBM Video Streaming Web Player API
 
 [![Build Status](https://travis-ci.com/IBM/video-streaming-web-player-api.svg?branch=master)](https://travis-ci.com/IBM/video-streaming-web-player-api)
+![npm](https://img.shields.io/npm/v/ibm-video-streaming-web-player-api)
 
-Enables sites using the [IBM Video Streaming] embed iframe to build and adapt on the embed live player.
+Enables sites using the [IBM Video Streaming](https://video.ibm.com/) embed iframe to build and adapt on the embed live player.
 
-The IBM Video Streaming Player API provides basic methods to control the live stream or recorded video playback, and enables the user to access essential events of the live stream or the played video.
+The Player API provides basic methods to control the live stream or recorded video playback, and enables the user to access essential events of the live stream or the played video.
 
-The IBM Video Streaming Player API requires [postMessage] DOM API, it won't work in browsers that does not support the postMessage API.
+The Player API requires the [postMessage](https://www.w3.org/TR/webmessaging/) DOM API, it won’t work in browsers that does not support the postMessage API.
+
+## Download
+
+```bash
+npm install ibm-video-streaming-web-player-api
+```
 
 ## Usage
 
 Create an instance of the Embed API by providing the ID of the iframe, or the iframe DOM object itself:
 
 ```html
-<iframe id="iframeId" src="//ustream.tv/embed/1524" width="640" height="480" allowfullscreen webkitallowfullscreen></iframe>
+<iframe
+    id="iframeId"
+    src="//ustream.tv/embed/1524"
+    width="640"
+    height="480"
+    allowfullscreen
+    webkitallowfullscreen
+></iframe>
 ```
 
+### global variable
+
 ```javascript
-var viewer = UstreamEmbed('iframeId');
+const viewer = window.PlayerAPI('iframeId');
+```
+
+### es modules
+
+```javascript
+import PlayerAPI from 'ibm-video-streaming-web-player-api';
+
+const viewer = PlayerAPI('iframeId'); // id or HTMLIFrameElement reference
 ```
 
 The IBM Video Streaming Player API provides the following methods:
@@ -33,13 +57,14 @@ The default behaviour of the player can be modified by extending the src URL wit
 
 | Parameter | Effect | Values | Default |
 | ------------- | ----------- | ----------- | ----------- |
-| allowfullscreen | Disables fullscreen and remove the button. | true/false | true |
-| autoplay | Starts video playback automatically. | true/false | false |
-| controls | Hides all UI elements. | true/false | true |
-| offaircontent | Disables displaying offair content. | true/false | true |
-| quality | Overrides the automatic quality selection. | low, med, high, auto | auto |
-| showtitle | Hides title and viewer count. | true/false | true |
-| volume | Overrides the default volume. 0 is mute, 1 is max volume. | 0.0-1.0 | user setting |
+| allowfullscreen | Enables full-screen. False value makes the full-screen button inactive. | true/false | true |
+| autoplay | Starts video playback automatically. Browser settings are stronger and may override the value of this parameter. | true/false | false |
+| controls | When set to false it hides all UI elements. | true/false | true |
+| hideCTA | Disables CTA overlays. Use liveCtaUpdate event to build your own. | true/false | false |
+| forced-quality | Turns off the automatic quality selection and selects the appropriate quality. Low is the smallest available quality, high is the largest and med is the middlemost choice. | low, med, high | N/A |
+| initial-quality | Sets the initial quality for the automatic quality selection. The quality selection logic is still turned on and can switch to another quality after playback is started. | low, med, high | N/A |
+| showtitle | Shows title and viewer count information inside the player area. | true/false | true |
+| volume | Set volume for playback as a percentage of the max volume. Overrides the default volume (100). | 0-100 | 100 |
 
 ## callMethod
 
@@ -136,7 +161,22 @@ Requires one argument:
 ##### Example:
 
 ```javascript
-viewer.callMethod('quality', 16); // set to high
+viewer.callMethod('quality', 0); // set to highest quality
+```
+
+### cc (closed caption)
+
+Displays the selected closed caption if available. You can use the ‘None’ option by using -1 as the argumnet. Otherwise it requires this argument:
+
+Requires one argument:
+
+* an `index` key from the received closed caption object in `cc` event
+
+##### Example:
+
+```javascript
+viewer.callMethod('cc', 1); //enables the closed caption with index 1
+viewer.callMethod('cc', -1); //disables the closed caption
 ```
 
 ---------------------------------------
@@ -158,6 +198,7 @@ Get the video duration in seconds.
 
 ```javascript
 viewer.getProperty('duration', function (duration) {
+    // passed value is e.g. 120.345
     ...
 });
 ```
@@ -171,6 +212,18 @@ Get the current viewer count for the loaded live stream.
 
 ```javascript
 viewer.getProperty('viewers', function (viewerNumber) {
+    ...
+});
+```
+
+### allTimeTotalViewers
+
+Get the accumulated total viewer number for the loaded channel. Doesn’t return anything in case of videos.
+
+##### Example:
+
+```javascript
+viewer.getProperty('allTimeTotalViewers', function (allTimeTotalViewers) {
     ...
 });
 ```
@@ -224,6 +277,18 @@ viewer.getProperty('playingContent', function (content) {
     //  - if it's offair and doesn't have offair video content
 });
 ```
+
+### volume
+
+Get the player volume. This will return the actual value of volume in percents.
+
+##### Example:
+
+```javascript
+viewer.getProperty('volume', function (volume) {
+    // volume == 0 for muted playback
+    ...
+});
 
 ---------------------------------------
 
@@ -303,10 +368,16 @@ viewer.addListener('size', callBack);
 
 Fired when the stream quality options are available.
 
-Receives an object, with the `qualityID` as keys, and an object with two properties as values:
+Receives an array of quality objects, in which are the following keys:
 
-* `label` (string) label to show to users on control UI, eg.: "480p"
-* `active` (booelan) if this quality is used or set
+* `id` (number) the id with which the quality method can be called
+* `codec` (string)
+* `width` (number) width of the quality version in pixels
+* `height` (number) height of the quality version in pixels
+* `bitrate` (number) actual bitrate value in kbps
+* `transcoded` (boolean) is this quality one of the transcoded versions or the original ingested quality
+* `label` (object): its `text` key has the text to show to users on control UI, eg.: “480p”
+* `selected` (boolean) is this quality set to display
 
 
 ##### Example:
@@ -314,13 +385,54 @@ Receives an object, with the `qualityID` as keys, and an object with two propert
 viewer.addListener('quality', callBack);
 ```
 ```javascript
-// example quality object
-{
-    "0":{"label":"240p","active":false},
-    "1":{"label":"360p","active":false},
-    "2":{"label":"480p","active":false},
-    "16":{"label":"BEST","active":true}
-}
+// example payload
+[
+    {
+        "id": 0,
+        "codec": "avc1.4d001f",
+        "bitrate": 1406,
+        "transcoded": false,
+        "width": 1280,
+        "height": 720,
+        "label": {
+            "text": "720p",
+            "suffix": " HD",
+            "bitrate": " @ 1.4 Mbps"
+        },
+        "selected": false
+    },
+]
+```
+
+
+### cc
+
+Fired when there are closed captions available on the stream.
+
+Returns an array containing closed captions as objects.
+
+* `index` (number) unique index of the closed caption
+* `label` (string) displayed label of the closed caption
+* `language` (string) ISO language code of the closed caption
+* `country` (string) ISO code of country
+* `active` (boolean) height of the quality version in pixels
+
+##### Example:
+```javascript
+viewer.addListener('cc', callBack);
+```
+
+```javascript
+// example payload
+[
+    {
+        "index": 0,
+        "label": "Spanish",
+        "language": "es",
+        "country": "00",
+        "active": true
+    }
+]
 ```
 
 ### content
@@ -333,6 +445,38 @@ Received arguments: data (array)
 ##### Example:
 ```javascript
 viewer.addListener('content', callBack);
+```
+
+### liveCtaUpdate
+
+Fired when there is a live cta available on the stream.
+
+Returns an object:
+
+* `buttonText` (string) text of the button
+* `buttonUrl` (string) URL of CTA
+* `description` (string) description of CTA
+* `id` (integer) id of CTA
+* `imageUrl` (string) URL of the image
+* `title` (string) title of CTA
+
+##### Example:
+```javascript
+viewer.addListener('liveCtaUpdate', callBack);
+```
+
+```javascript
+// example payload
+{
+    activate: {
+        buttonText: "Click here!"
+        buttonUrl: "https://video.ibm.com"
+        description: "The Future of Video with Watson",
+        id: 123,
+        imageUrl: "URL of image",
+        title: "IBM Video Streaming"
+    }
+}
 ```
 
 
