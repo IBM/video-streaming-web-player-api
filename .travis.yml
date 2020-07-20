@@ -13,12 +13,12 @@ jobs:
       script:
         - npm run build
         - npm run test
-    # - stage: publish
-    #   script: npm run build
-    #   deploy:
-    #     provider: npm
-    #     email: '$NPM_EMAIL'
-    #     api_key: '$NPM_TOKEN'
-    #     skip_cleanup: true
-    #     on:
-    #       tags: true
+    - stage: publish
+      script: npm run build
+      deploy:
+        provider: npm
+        email: '$NPM_EMAIL'
+        api_key: '$NPM_TOKEN'
+        skip_cleanup: true
+        on:
+          tags: true
