@@ -4,6 +4,7 @@
   "version": "0.0.1",
   "description": "IBM Video Streaming web player API for controlling embedded players created at video.ibm.com.",
   "main": "dist/index.min.js",
+  "module": "src/index.js",
   "scripts": {
     "test": "jest",
     "lint": "eslint --color src/**/*.js tests/**/*.js",
