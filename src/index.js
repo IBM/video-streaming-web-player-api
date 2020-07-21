@@ -262,8 +262,10 @@ export default (function () {
 	}
 
 	function onMessage(e) {
-		Object.entries(instances).forEach(([id, instance]) => {
+		Object.keys(instances).forEach((id) => {
+			const instance = instances[id];
 			const doc = document.getElementById(id);
+
 			if (doc && doc.contentWindow) {
 				if (doc.contentWindow === e.source) {
 					instance.onmessage(e);
