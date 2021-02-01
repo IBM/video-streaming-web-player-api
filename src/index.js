@@ -176,7 +176,9 @@ export default (function () {
 						if (!!d.event && d.event.live === true) {
 							dispatchEvent(events, 'live');
 							return;
-						} if (!!d.event && d.event.live === false) {
+						}
+
+						if (!!d.event && d.event.live === false) {
 							dispatchEvent(events, 'offline');
 							return;
 						}
