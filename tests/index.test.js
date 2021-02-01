@@ -1,20 +1,30 @@
-const EmbedApi = require('../dist/index.umd').default;
-const createMockFrame = require('./mocks/frame');
+const PlayerAPI = require('../src/index').default;
+const createMockIFrame = require('./mocks/iframe');
+
+jest.mock('../src/iframe', () => ({
+	getIframe: val => val,
+	esModule: true,
+}));
 
 describe('EmbedAPI tests', () => {
 	let mockFrame = null;
 
 	beforeEach(() => {
-		mockFrame = createMockFrame();
+		mockFrame = createMockIFrame();
 	});
 
 	afterEach(() => {
 		mockFrame = null;
 	});
 
+	afterAll(() => {
+		jest.resetAllMocks();
+		jest.resetModules();
+	});
+
 	describe('addListener', () => {
 		test('ready', () => {
-			const	embedapi = EmbedApi(mockFrame);
+			const	embedapi = PlayerAPI(mockFrame);
 			const callback = jest.fn();
 
 			embedapi.addListener('ready', callback);
@@ -24,7 +34,7 @@ describe('EmbedAPI tests', () => {
 		});
 
 		test('live', () => {
-			const	embedapi = EmbedApi(mockFrame);
+			const	embedapi = PlayerAPI(mockFrame);
 			const callback = jest.fn();
 
 			embedapi.addListener('live', callback);
@@ -38,7 +48,7 @@ describe('EmbedAPI tests', () => {
 
 	describe('removeListener', () => {
 		test('live', () => {
-			const	embedapi = EmbedApi(mockFrame);
+			const	embedapi = PlayerAPI(mockFrame);
 			const callback = jest.fn();
 
 			embedapi.addListener('live', callback);
@@ -54,7 +64,7 @@ describe('EmbedAPI tests', () => {
 
 	describe('callMethod', () => {
 		test('play', () => {
-			const	embedapi = EmbedApi(mockFrame);
+			const	embedapi = PlayerAPI(mockFrame);
 			const callback = jest.fn();
 
 			mockFrame.on('message', callback);
@@ -71,7 +81,7 @@ describe('EmbedAPI tests', () => {
 		});
 
 		test('pause', () => {
-			const	embedapi = EmbedApi(mockFrame);
+			const	embedapi = PlayerAPI(mockFrame);
 			const callback = jest.fn();
 
 			mockFrame.on('message', callback);
@@ -88,7 +98,7 @@ describe('EmbedAPI tests', () => {
 		});
 
 		test('stop', () => {
-			const	embedapi = EmbedApi(mockFrame);
+			const	embedapi = PlayerAPI(mockFrame);
 			const callback = jest.fn();
 
 			mockFrame.on('message', callback);
@@ -105,7 +115,7 @@ describe('EmbedAPI tests', () => {
 		});
 
 		test('load', () => {
-			const	embedapi = EmbedApi(mockFrame);
+			const	embedapi = PlayerAPI(mockFrame);
 			const callback = jest.fn();
 
 			mockFrame.on('message', callback);
@@ -123,7 +133,7 @@ describe('EmbedAPI tests', () => {
 		});
 
 		test('seek', () => {
-			const	embedapi = EmbedApi(mockFrame);
+			const	embedapi = PlayerAPI(mockFrame);
 			const callback = jest.fn();
 
 			mockFrame.on('message', callback);
@@ -141,7 +151,7 @@ describe('EmbedAPI tests', () => {
 		});
 
 		test('volume', () => {
-			const	embedapi = EmbedApi(mockFrame);
+			const	embedapi = PlayerAPI(mockFrame);
 			const callback = jest.fn();
 
 			mockFrame.on('message', callback);
@@ -159,7 +169,7 @@ describe('EmbedAPI tests', () => {
 		});
 
 		test('quality', () => {
-			const	embedapi = EmbedApi(mockFrame);
+			const	embedapi = PlayerAPI(mockFrame);
 			const callback = jest.fn();
 
 			mockFrame.on('message', callback);
@@ -177,12 +187,12 @@ describe('EmbedAPI tests', () => {
 		});
 
 		test('callMethod with missed ready event', () => {
-			mockFrame = createMockFrame({ ready: true });
+			mockFrame = createMockIFrame({ ready: true });
 			mockFrame.send('ready', true);
 
-			const	embedapi = EmbedApi(mockFrame); // late init
-			const callback = jest.fn();
+			const	embedapi = PlayerAPI(mockFrame); // late init
 
+			const callback = jest.fn();
 			mockFrame.on('message', callback);
 
 			embedapi.callMethod('play');
@@ -196,12 +206,11 @@ describe('EmbedAPI tests', () => {
 		});
 	});
 
-
 	describe('socialstream connect', () => {
 		let ssFrame = null;
 
 		beforeEach(() => {
-			ssFrame = createMockFrame('socialStream');
+			ssFrame = createMockIFrame('socialStream');
 		});
 	
 		afterEach(() => {
@@ -209,7 +218,7 @@ describe('EmbedAPI tests', () => {
 		});
 
 		test('listen to sstream iframe', () => {
-			const embedapi = EmbedApi(mockFrame);
+			const embedapi = PlayerAPI(mockFrame);
 			const windowSpy = jest.spyOn(window, 'addEventListener');
 			embedapi.callMethod('socialstream', ssFrame);
 
@@ -222,7 +231,7 @@ describe('EmbedAPI tests', () => {
 
 			ssFrame.on('message', callback);
 
-			const embedapi = EmbedApi(mockFrame);
+			const embedapi = PlayerAPI(mockFrame);
 			mockFrame.send('ready', true);
 			embedapi.callMethod('socialstream', ssFrame);
 
@@ -236,7 +245,7 @@ describe('EmbedAPI tests', () => {
 		test('load', () => {
 			const callback = jest.fn();
 			const ssCallback = jest.fn();
-			const embedapi = EmbedApi(mockFrame);
+			const embedapi = PlayerAPI(mockFrame);
 
 			mockFrame.on('message', callback);
 			ssFrame.on('message', ssCallback);
@@ -264,7 +273,7 @@ describe('EmbedAPI tests', () => {
 	describe('getProperty', () => {
 		test('duration', () => {
 			const callback = jest.fn();
-			const embedapi = EmbedApi(mockFrame);
+			const embedapi = PlayerAPI(mockFrame);
 
 			mockFrame.send('ready', true);
 			embedapi.getProperty('duration', callback);
@@ -275,7 +284,7 @@ describe('EmbedAPI tests', () => {
 
 		test('viewers', () => {
 			const callback = jest.fn();
-			const embedapi = EmbedApi(mockFrame);
+			const embedapi = PlayerAPI(mockFrame);
 
 			mockFrame.send('ready', true);
 			embedapi.getProperty('viewers', callback);
@@ -286,7 +295,7 @@ describe('EmbedAPI tests', () => {
 
 		test('progress', () => {
 			const callback = jest.fn();
-			const embedapi = EmbedApi(mockFrame);
+			const embedapi = PlayerAPI(mockFrame);
 
 			mockFrame.send('ready', true);
 			embedapi.getProperty('progress', callback);
@@ -298,7 +307,7 @@ describe('EmbedAPI tests', () => {
 		describe('playingContent', () => {
 			test('called once', () => {
 				const callback = jest.fn();
-				const embedapi = EmbedApi(mockFrame);
+				const embedapi = PlayerAPI(mockFrame);
 	
 				mockFrame.send('ready', true);
 				embedapi.getProperty('playingContent', callback);
@@ -309,7 +318,7 @@ describe('EmbedAPI tests', () => {
 
 			test('called twice', () => {
 				const callback = jest.fn();
-				const embedapi = EmbedApi(mockFrame);
+				const embedapi = PlayerAPI(mockFrame);
 				mockFrame.send('ready', true);
 
 				embedapi.callMethod('playingContent', () => {
@@ -322,10 +331,10 @@ describe('EmbedAPI tests', () => {
 		});
 
 		test('getProperty with missed ready event', () => {
-			mockFrame = createMockFrame({ ready: true });
+			mockFrame = createMockIFrame({ ready: true });
 			mockFrame.send('ready', true);
 
-			const	embedapi = EmbedApi(mockFrame); // late init
+			const	embedapi = PlayerAPI(mockFrame); // late init
 			const callback = jest.fn();
 
 			embedapi.getProperty('duration', callback);
@@ -339,7 +348,7 @@ describe('EmbedAPI tests', () => {
 		test('destroy', () => {
 			const callback = jest.fn();
 			const callback2 = jest.fn();
-			const embedapi = EmbedApi(mockFrame);
+			const embedapi = PlayerAPI(mockFrame);
 
 			embedapi.addListener('ready', callback);
 			embedapi.addListener('live', callback);
