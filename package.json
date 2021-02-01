@@ -7,6 +7,7 @@
   "module": "dist/index.es.min.js",
   "scripts": {
     "test": "jest",
+    "test:coverage": "jest --coverage",
     "lint": "eslint --color src/**/*.js tests/**/*.js",
     "example": "npm run build && npx http-server -o /examples",
     "build": "npm run build:dev && npm run build:prod",
