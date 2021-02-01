@@ -5,9 +5,12 @@
  * The IBM Video Streaming Player API provides methods to control
  * live streams and on demand playback of embedded players.
  */
+import { getIframe } from './iframe';
+import { getHostName } from './host';
+import { addEvent } from './dom';
+
 export default (function () {
 	const instances = {};
-	const hostRegexp = new RegExp('^(http(?:s)?://[^/]+)', 'im');
 
 	function Embed(iframe) {
 		return createInstance(iframe);
@@ -33,7 +36,7 @@ export default (function () {
 
 			function addCommandQueue(method, ...args) {
 				if (method === 'socialstream') {
-					addDomEvent(window, 'message', onSocialFrame);
+					addEvent(window, 'message', onSocialFrame);
 
 					sStreamElement = getIframe(args[0]);
 					sStreamHost = getHostName(sStreamElement.getAttribute('src'));
@@ -231,13 +234,6 @@ export default (function () {
 		return instance;
 	}
 
-	function getIframe(iframe) {
-		if (typeof iframe === 'string') {
-			iframe = document.getElementById(iframe);
-		}
-		return iframe;
-	}
-
 	function dispatchEvent(events, event, data) {
 		if (!events[event]) {
 			return;
@@ -282,22 +278,7 @@ export default (function () {
 		element.contentWindow.postMessage(JSON.stringify(data), host);
 	}
 
-	function getHostName(url) {
-		if (url.indexOf('http') < 0) {
-			url = window.location.protocol + url;
-		}
-		return url.match(hostRegexp)[1].toString();
-	}
-
-	function addDomEvent(target, event, cb) {
-		if (target.addEventListener) {
-			target.addEventListener(event, cb, false);
-		} else {
-			target.attachEvent(`on${event}`, cb);
-		}
-	}
-
-	addDomEvent(window, 'message', onMessage);
+	addEvent(window, 'message', onMessage);
 
 	window.PlayerAPI = Embed;
 	return Embed;
