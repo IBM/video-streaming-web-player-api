@@ -1,4 +1,4 @@
-import { ERRORS } from "./errors";
+import { ERRORS } from './errors';
 
 const hostExpression = new RegExp('^(http(?:s)?://[^/]+)', 'im');
 

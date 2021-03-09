@@ -8,7 +8,7 @@ function getAttribute(attr) {
 }
 
 module.exports = ({ id, ready } = {}) => {
-	let messageHandlers = [];
+	const messageHandlers = [];
 	let instance;
 
 	function sendEvent(eventData) {
@@ -22,7 +22,7 @@ module.exports = ({ id, ready } = {}) => {
 	}
 
 	function send(event, data, property) {
-		let eventData = {};
+		const eventData = {};
 		if (!property) {
 			eventData.event = {};
 			eventData.event[event] = data;
@@ -56,7 +56,7 @@ module.exports = ({ id, ready } = {}) => {
 			// no default
 		}
 
-		messageHandlers.forEach(cb => cb.call(window, data, host));
+		messageHandlers.forEach((cb) => cb.call(window, data, host));
 	}
 
 	function on(_, cb) {
