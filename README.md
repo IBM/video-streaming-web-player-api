@@ -58,7 +58,7 @@ The default behaviour of the player can be modified by extending the src URL wit
 | Parameter | Effect | Values | Default |
 | ------------- | ----------- | ----------- | ----------- |
 | allowfullscreen | Enables full-screen. False value makes the full-screen button inactive. | true/false | true |
-| api-target-origin | Origin of the page where player api is included. Use `encodeURIComponent` to encode origin. This parameter is only required for browsers where usage of `location.ancestorOrigins` is not supported (e.g. Firefox, IE).                                                                              | encoded origin e.g. output of `encodeURIComponent('https://video.ibm.com')`        | N/A     |
+| api-target-origin | Origin of the page where player api is included. Use `encodeURIComponent` to URL encode origin. This parameter is only required in case of SSO authentication.                                                                              | URL encoded origin e.g. output of `encodeURIComponent('https://video.ibm.com')`        | N/A     |
 | autoplay | Starts video playback automatically. Browser settings are stronger and may override the value of this parameter. | true/false | false |
 | controls | When set to false it hides all UI elements. | true/false | true |
 | forced-quality | Turns off the automatic quality selection and selects the appropriate quality. Low is the smallest available quality, high is the largest and med is the middlemost choice. | low, med, high | N/A |
