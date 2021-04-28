@@ -58,10 +58,11 @@ The default behaviour of the player can be modified by extending the src URL wit
 | Parameter | Effect | Values | Default |
 | ------------- | ----------- | ----------- | ----------- |
 | allowfullscreen | Enables full-screen. False value makes the full-screen button inactive. | true/false | true |
+| api-target-origin | Origin of the page where player api is included. Use `encodeURIComponent` to URL encode origin. This parameter is only required in case of SSO authentication.                                                                              | URL encoded origin e.g. output of `encodeURIComponent('https://video.ibm.com')`        | N/A     |
 | autoplay | Starts video playback automatically. Browser settings are stronger and may override the value of this parameter. | true/false | false |
 | controls | When set to false it hides all UI elements. | true/false | true |
-| hideCTA | Disables CTA overlays. Use liveCtaUpdate event to build your own. | true/false | false |
 | forced-quality | Turns off the automatic quality selection and selects the appropriate quality. Low is the smallest available quality, high is the largest and med is the middlemost choice. | low, med, high | N/A |
+| hideCTA | Disables CTA overlays. Use liveCtaUpdate event to build your own. | true/false | false |
 | initial-quality | Sets the initial quality for the automatic quality selection. The quality selection logic is still turned on and can switch to another quality after playback is started. | low, med, high | N/A |
 | showtitle | Shows title and viewer count information inside the player area. | true/false | true |
 | volume | Set volume for playback as a percentage of the max volume. Overrides the default volume (100). | 0-100 | 100 |

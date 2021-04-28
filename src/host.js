@@ -8,7 +8,7 @@ const hostExpression = new RegExp('^(http(?:s)?://[^/]+)', 'im');
  * @returns {string} hostName
  */
 export function getHostName(url) {
-	if (url.indexOf('http') < 0) {
+	if (url.indexOf('http') !== 0) {
 		url = window.location.protocol + url;
 	}
 

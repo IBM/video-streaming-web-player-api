@@ -51,5 +51,11 @@ describe('host', () => {
 			const expectedError = new TypeError(ERRORS.INVALID_IFRAME_SRC);
 			expect(() => getHostName(host)).toThrow(expectedError);
 		});
+
+		test('should work with api-target-origin parameter', () => {
+			const host = 'http://video.ibm.com?api-target-origin=https%3A%2F%2Fpages.github.ibm.com%2F';
+			const expected = 'http://video.ibm.com?api-target-origin=https%3A%2F%2Fpages.github.ibm.com%2F';
+			expect(getHostName(host)).toEqual(expected);
+		});
 	});
 });
