@@ -2,6 +2,20 @@
 
 All notable changes to this project will be documented in this file. See [standard-version](https://github.com/conventional-changelog/standard-version) for commit guidelines.
 
+## [1.3.0](https://github.com/IBM/video-streaming-web-player-api/compare/v1.2.0...v1.3.0) (2021-04-28)
+
+
+### Features
+
+* **README.md:** PLAY-2249 document api-target-origin ([2779115](https://github.com/IBM/video-streaming-web-player-api/commit/2779115ea54c92586e8e255a55afdef813703521))
+
+
+### Bug Fixes
+
+* **host:** PLAY-2249 fix url parse error when api-target-origin parameter is present ([311e2a8](https://github.com/IBM/video-streaming-web-player-api/commit/311e2a80391b23739c2a590848ada340c6952bd4))
+* **README.md:** PLAY-2249 remove ancestorOrigins description ([c6ce949](https://github.com/IBM/video-streaming-web-player-api/commit/c6ce9498c8bdae69bd5b86a6c2c2aaefc0042cfe))
+* **README.md:** PLAY-2249 reorganize parameter list ([3804310](https://github.com/IBM/video-streaming-web-player-api/commit/3804310dea294105dd2474e033abc0793b5626a4))
+
 ## 1.2.0 (2021-03-10)
 
 
