@@ -6,7 +6,7 @@ describe('iframe', () => {
 
 	beforeEach(() => {
 		originalBody = document.body.innerHTML;
-	})
+	});
 
 	afterEach(() => {
 		document.body.innerHTML = originalBody;

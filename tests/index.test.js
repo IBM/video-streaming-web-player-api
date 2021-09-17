@@ -2,7 +2,7 @@ const PlayerAPI = require('../src/index').default;
 const createMockIFrame = require('./mocks/iframe');
 
 jest.mock('../src/iframe', () => ({
-	getIframe: val => val,
+	getIframe: (val) => val,
 	esModule: true,
 }));
 
@@ -212,7 +212,7 @@ describe('EmbedAPI tests', () => {
 		beforeEach(() => {
 			ssFrame = createMockIFrame('socialStream');
 		});
-	
+
 		afterEach(() => {
 			ssFrame = null;
 		});
@@ -308,10 +308,10 @@ describe('EmbedAPI tests', () => {
 			test('called once', () => {
 				const callback = jest.fn();
 				const embedapi = PlayerAPI(mockFrame);
-	
+
 				mockFrame.send('ready', true);
 				embedapi.getProperty('playingContent', callback);
-	
+
 				expect(callback).toHaveBeenCalledTimes(1);
 				expect(callback.mock.calls[0][0]).toBe(100);
 			});
@@ -366,5 +366,4 @@ describe('EmbedAPI tests', () => {
 			expect(callback2).not.toHaveBeenCalled();
 		});
 	});
-
 });
