@@ -180,6 +180,16 @@ viewer.callMethod('cc', 1); //enables the closed caption with index 1
 viewer.callMethod('cc', -1); //disables the closed caption
 ```
 
+### webkitEnterFullscreen (iOS)
+
+Calls `webkitEnterFullscreen` on the `HTMLVideoElement` to access the video's native fullscreen UI.
+
+###### Example:
+
+```js
+viewer.callMethod('webkitEnterFullscreen');
+```
+
 ---------------------------------------
 
 ## getProperty
@@ -481,6 +491,37 @@ viewer.addListener('liveCtaUpdate', callBack);
 }
 ```
 
+### error
 
-[Ustream]:http://ustream.tv/
+Fired when an unexpected event occures.
+
+Returns an object:
+
+- `name` (string) error name
+- `message` (string) error message
+
+Available error type(s):
+
+- `autoplayRejected`
+- `webkitEnterFullscreenRejected`
+
+###### Example
+
+```js
+viewer.addListener('error', function(type, errorEvent) {
+    switch (errorEvent.name) {
+        case 'autoplayRejected':
+            // TODO: display fallback button
+            console.log(errorEvent.message);
+            break;
+        case 'webkitEnterFullscreenRejected':
+            // TODO: browser prevented the request, user gesture is needed
+            console.log(errorEvent.message);
+            break;
+        // no default
+    }
+});
+```
+
+[IBM Video Streaming]:http://video.ibm.com/
 [postMessage]:http://www.w3.org/TR/webmessaging/
