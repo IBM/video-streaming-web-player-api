@@ -1,5 +1,4 @@
 const { merge } = require('webpack-merge');
-const EsmWebpackPlugin = require('@purtuga/esm-webpack-plugin');
 const commonConfig = require('./webpack.common.config');
 
 const developmentConfig = {
@@ -7,13 +6,14 @@ const developmentConfig = {
 
 	output: {
 		filename: 'index.es.js',
-		library: 'ibmVideoStreamingPlayerAPI',
-		libraryTarget: 'var',
+		library: {
+			type: 'module',
+		},
 	},
 
-	plugins: [
-		new EsmWebpackPlugin(),
-	],
+	experiments: {
+		outputModule: true,
+	},
 };
 
 const productionConfig = {
@@ -21,20 +21,21 @@ const productionConfig = {
 
 	output: {
 		filename: 'index.es.min.js',
-		library: 'ibmVideoStreamingPlayerAPI',
-		libraryTarget: 'var',
+		library: {
+			type: 'module',
+		},
 	},
 
-	plugins: [
-		new EsmWebpackPlugin(),
-	],
+	experiments: {
+		outputModule: true,
+	},
 };
 
 module.exports = (env) => {
-	switch (env) {
-		case 'development':
+	switch (true) {
+		case env.development:
 			return merge(commonConfig, developmentConfig);
-		case 'production':
+		case env.production:
 			return merge(commonConfig, productionConfig);
 		default:
 			throw new Error('No matching configuration was found!');
