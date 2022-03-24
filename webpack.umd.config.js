@@ -22,10 +22,10 @@ const productionConfig = {
 };
 
 module.exports = (env) => {
-	switch (env) {
-		case 'development':
+	switch (true) {
+		case env.development:
 			return merge(commonConfig, developmentConfig);
-		case 'production':
+		case env.production:
 			return merge(commonConfig, productionConfig);
 		default:
 			throw new Error('No matching configuration was found!');
