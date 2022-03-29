@@ -1,7 +1,7 @@
 {
   "name": "ibm-video-streaming-web-player-api",
   "author": "",
-  "version": "1.3.2",
+  "version": "1.3.3",
   "description": "IBM Video Streaming web player API for controlling embedded players created at video.ibm.com.",
   "main": "dist/index.umd.min.js",
   "module": "dist/index.es.min.js",
