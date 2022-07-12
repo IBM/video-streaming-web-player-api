@@ -1,5 +1,6 @@
 # IBM Video Streaming Web Player API
 
+[![CII Best Practices](https://bestpractices.coreinfrastructure.org/projects/5859/badge)](https://bestpractices.coreinfrastructure.org/projects/5859)
 [![Build Status](https://travis-ci.com/IBM/video-streaming-web-player-api.svg?branch=master)](https://travis-ci.com/IBM/video-streaming-web-player-api)
 ![npm](https://img.shields.io/npm/v/ibm-video-streaming-web-player-api)
 
