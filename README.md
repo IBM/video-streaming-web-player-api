@@ -525,3 +525,19 @@ viewer.addListener('error', function(type, errorEvent) {
 
 [IBM Video Streaming]:http://video.ibm.com/
 [postMessage]:http://www.w3.org/TR/webmessaging/
+
+## Build
+
+```bash
+# install npm dependencies
+npm install
+# build es and umd bundles
+npm run build
+```
+
+## Lint (eslint)
+
+```bash
+# run eslint
+npm run lint
+```
