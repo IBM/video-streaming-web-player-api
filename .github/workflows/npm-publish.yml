@@ -1,7 +1,9 @@
-name: Node.js Package
+name: NPM publisher
+
 on:
   release:
     types: [created]
+
 jobs:
   publish-npm:
     runs-on: ubuntu-latest
