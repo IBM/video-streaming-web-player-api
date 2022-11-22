@@ -1,6 +1,6 @@
 import { ERRORS } from './errors';
 
-const hostExpression = new RegExp('^(http(?:s)?://[^/]+)', 'im');
+const hostExpression = /^(http(?:s)?:\/\/[^/]+)/im;
 
 /**
  * @param {string} url
@@ -8,12 +8,12 @@ const hostExpression = new RegExp('^(http(?:s)?://[^/]+)', 'im');
  * @returns {string} hostName
  */
 export function getHostName(url) {
-	if (url.indexOf('http') !== 0) {
-		url = window.location.protocol + url;
-	}
+	const urlWithProtocol = url.indexOf('http') !== 0
+		? `${window.location.protocol}${url}`
+		: url;
 
 	try {
-		const [, hostName] = url.match(hostExpression);
+		const [, hostName] = urlWithProtocol.match(hostExpression);
 		return hostName;
 	} catch (_) {
 		throw new TypeError(ERRORS.INVALID_IFRAME_SRC);

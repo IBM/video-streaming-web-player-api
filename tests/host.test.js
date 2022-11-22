@@ -1,15 +1,19 @@
-global.window = Object.create(window);
-const realLocation = window.location;
-
 const { ERRORS } = require('../src/errors');
 const { getHostName } = require('../src/host');
 
 describe('host', () => {
+	let originalLocation;
+
+	beforeEach(() => {
+		originalLocation = window.location;
+	});
+
 	afterEach(() => {
 		Object.defineProperty(window, 'location', {
-			value: realLocation,
+			value: originalLocation,
 			writable: true,
 		});
+		originalLocation = undefined;
 
 		jest.resetAllMocks();
 		jest.resetModules();
@@ -35,8 +39,7 @@ describe('host', () => {
 		});
 
 		test('should handle missing protocol', () => {
-			delete window.location;
-			Object.defineProperty(global.window, 'location', {
+			Object.defineProperty(window, 'location', {
 				value: { protocol: 'https:' },
 				writable: true,
 			});
